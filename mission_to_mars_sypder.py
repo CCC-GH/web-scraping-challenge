@@ -1,26 +1,25 @@
 """
-HW12 - Mission to Mars
-!pip install selenium
-!pip install splinter
-!pip install tweepy
+Homework-12-Web-Scraping-and-Document-Databases
 
 """
 from splinter import Browser
 from bs4 import BeautifulSoup
+import pandas
+import time
 path={'executable_path':'/Users/coffm/Downloads/chromedriver.exe'}
 page=Browser('chrome', **path, headless=False)
 
 # Web Scraping - Mission to Mars
 # Scrape the [NASA Mars page Site](https://mars.nasa.gov/page/) 
 # Collect the latest page Title and Paragraph Text. Assign the text to variables that you can reference later.
-#url='https://mars.nasa.gov/page/?page=0&per_page=40&order=publish_date+desc%2Ccreated_at+desc&search=&category=19%2C165%2C184%2C204&blank_scope=Latest'
 url='https://mars.nasa.gov/news/'
 page.visit(url)
 html=page.html
 soup=BeautifulSoup(html, 'html.parser')
+time.sleep(3)
 news=soup.find('div', class_='list_text')
 newsTitle=news.find('div', class_='content_title').text
-print(newsTitle)
+print('\n'+newsTitle)
 newsParagraph=news.find('div', class_ ='article_teaser_body').text
 print(newsParagraph)
 
@@ -33,21 +32,21 @@ imageURL='https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
 page.visit(imageURL)
 html=page.html
 soup=BeautifulSoup(html, 'html.parser')
+time.sleep(3)
 image = (soup.find_all('div', class_='carousel_items')[0].a.get('data-fancybox-href'))
 featured = 'https://www.jpl.nasa.gov'+ image
-print(featured)
+print('\n'+featured)
 
 # Visit the Mars Facts webpage [here](https://space-facts.com/mars/) 
 # Use Pandas to scrape the table containing facts about the planet including Diameter, Mass, etc.
 # Use Pandas to convert the data to a HTML table string.
-import pandas
 facts_url='https://space-facts.com/mars/'
 page.visit(facts_url)
 marsData=pandas.read_html(facts_url)
 marsData=pandas.DataFrame(marsData[0])
 marsFacts=marsData.to_html(header=False, index=False)
-marsFacts=((pandas.read_html(marsFacts))[0]).rename(columns={0: "Attribute", 1: "Value"}).set_index(['Attribute'])
-print(marsFacts)
+marsFacts=((pandas.read_html(marsFacts))[0]).rename(columns={0: 'Attribute', 1: 'Value'}).set_index(['Attribute'])
+print('\n',marsFacts)
 
 # Visit the USGS Astrogeology site [here](https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars) to obtain high resolution images for each of Mar's hemispheres.
 # You will need to click each of the links to the hemispheres in order to find the image url to the full resolution image.
@@ -56,8 +55,9 @@ print(marsFacts)
 hemispheresURL='https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
 page.visit(hemispheresURL)
 html=page.html
-soup=BeautifulSoup(html, 'html.parser')
 marsHemisphere=[]
+soup=BeautifulSoup(html, 'html.parser')
+time.sleep(3)
 products=soup.find('div', class_='result-list' )
 hemispheres=products.find_all('div', class_='item')
 for hemisphere in hemispheres:
@@ -72,4 +72,5 @@ for hemisphere in hemispheres:
     imageURL=downloads.find('a')['href']
     marsHemisphere.append({'title': title, 'img_url': imageURL})
 from pprint import pprint
+print('\n')
 pprint(marsHemisphere)
