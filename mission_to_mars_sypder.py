@@ -2,14 +2,16 @@
 Homework-12-Web-Scraping-and-Document-Databases
 
 """
+# Import dependencies 
 from splinter import Browser
 from bs4 import BeautifulSoup
 import pandas
 import time
-path={'executable_path':'/Users/coffm/Downloads/chromedriver.exe'}
+# Initialize browser
+path={'executable_path':'chromedriver.exe'}
 page=Browser('chrome', **path, headless=False)
 
-# Web Scraping - Mission to Mars
+# Web scraping - Mission to Mars
 # Scrape the [NASA Mars page Site](https://mars.nasa.gov/page/) 
 # Collect the latest page Title and Paragraph Text. Assign the text to variables that you can reference later.
 url='https://mars.nasa.gov/news/'
@@ -34,8 +36,8 @@ html=page.html
 soup=BeautifulSoup(html, 'html.parser')
 time.sleep(3)
 image = (soup.find_all('div', class_='carousel_items')[0].a.get('data-fancybox-href'))
-featured = 'https://www.jpl.nasa.gov'+ image
-print('\n'+featured)
+featured_image_url = 'https://www.jpl.nasa.gov'+ image
+print('\n'+featured_image_url)
 
 # Visit the Mars Facts webpage [here](https://space-facts.com/mars/) 
 # Use Pandas to scrape the table containing facts about the planet including Diameter, Mass, etc.
